@@ -1,0 +1,13 @@
+class Solution:
+    def numberOfSpecialChars(self, word: str) -> int:
+        count = 0
+        
+        for c in 'abcdefghijklmnopqrstuvwxyz':
+            lower_positions = [i for i, ch in enumerate(word) if ch == c]
+            upper_positions = [i for i, ch in enumerate(word) if ch == c.upper()]
+            
+            if lower_positions and upper_positions:
+                if max(lower_positions) < min(upper_positions):
+                    count += 1
+        
+        return count
