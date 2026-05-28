@@ -1,0 +1,38 @@
+from typing import List
+
+class Solution:
+    def stringIndices(self, wordsContainer: List[str], wordsQuery: List[str]) -> List[int]:
+        
+        class TrieNode:
+            def __init__(self):
+                self.children = {}
+                self.best_idx = -1
+        
+        root = TrieNode()
+        
+        for idx, word in enumerate(wordsContainer):
+            node = root
+            if node.best_idx == -1 or \
+               len(word) < len(wordsContainer[node.best_idx]) or \
+               (len(word) == len(wordsContainer[node.best_idx]) and idx < node.best_idx):
+                node.best_idx = idx
+            
+            for ch in reversed(word):
+                if ch not in node.children:
+                    node.children[ch] = TrieNode()
+                node = node.children[ch]
+                if node.best_idx == -1 or \
+                   len(word) < len(wordsContainer[node.best_idx]) or \
+                   (len(word) == len(wordsContainer[node.best_idx]) and idx < node.best_idx):
+                    node.best_idx = idx
+        
+        ans = []
+        for word in wordsQuery:
+            node = root
+            for ch in reversed(word):
+                if ch not in node.children:
+                    break
+                node = node.children[ch]
+            ans.append(node.best_idx)
+        
+        return ans
