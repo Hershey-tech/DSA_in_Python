@@ -1,0 +1,35 @@
+from typing import List
+
+class Solution:
+    def earliestFinishTime(
+        self,
+        landStartTime: List[int],
+        landDuration: List[int],
+        waterStartTime: List[int],
+        waterDuration: List[int]
+    ) -> int:
+
+        def best_finish_after_first(first_end: int, second_opens, second_durs):
+            """Given first ride ends at first_end, find best second ride finish."""
+            best = float('inf')
+            for open_t, dur in zip(second_opens, second_durs):
+                best = min(best, max(first_end, open_t) + dur)
+            return best
+
+        
+        best_land_end = min(
+            s + d for s, d in zip(landStartTime, landDuration)
+        )
+
+        
+        best_water_end = min(
+            s + d for s, d in zip(waterStartTime, waterDuration)
+        )
+
+       
+        t1 = best_finish_after_first(best_land_end,  waterStartTime, waterDuration)
+
+        
+        t2 = best_finish_after_first(best_water_end, landStartTime,  landDuration)
+
+        return min(t1, t2)
